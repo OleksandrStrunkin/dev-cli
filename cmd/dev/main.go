@@ -1,9 +1,10 @@
 package main
 
 import (
+	"dev-cli/internal/env"
+	"dev-cli/internal/uuid"
 	"fmt"
 	"os"
-	"dev-cli/internal/uuid"
 )
 
 func main() {
@@ -17,6 +18,8 @@ func main() {
 	case "uuid":
 		key:= uuid.Generate();
 		fmt.Println("New key:", key)
+	case "env":
+		env.PrintAll()
 
 	default:
 		fmt.Printf("Невідома команда: '%s'. Спробуйте 'uuid'.\n", command)
