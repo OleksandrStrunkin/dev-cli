@@ -2,6 +2,7 @@ package main
 
 import (
 	"dev-cli/internal/env"
+	"dev-cli/internal/hash"
 	"dev-cli/internal/jsonformat"
 	"dev-cli/internal/uuid"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Помилка: будь ласка, вкажіть команду. Наприклад: dev uuid")
+		fmt.Println("Доступні команди: uuid, env, json, info")
 		os.Exit(1)
 	}
 
@@ -32,6 +34,29 @@ func main() {
 			os.Exit(1)
 		}
 		fmt.Println(formated)
+	case "hash":
+		if len(os.Args) < 4 {
+			fmt.Println("Помилка: недостатньо аргументів.")
+			fmt.Println("Використання: dev hash <алгоритм> <текст>")
+			fmt.Println("Алгоритми: sha256, md5")
+			os.Exit(1)
+		}
+		algorithm := os.Args[2]
+		textToHash := os.Args[3]
+
+		switch algorithm {
+		case "sha256":
+			result := hash.SHA256(textToHash)
+			fmt.Println(result)
+		case "md5":
+			result := hash.MD5(textToHash)
+			fmt.Println(result)
+		default:
+			fmt.Printf("Помилка: невідомий алгоритм '%s'. Доступні: sha256, md5\n", algorithm)
+			os.Exit(1)
+		}
+	case "info":
+		fmt.Println("All command: uuid, env, json")
 	default:
 		fmt.Printf("Невідома команда: '%s'. Спробуйте 'uuid'.\n", command)
 	}
