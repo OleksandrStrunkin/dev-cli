@@ -4,6 +4,7 @@ import (
 	"dev-cli/internal/env"
 	"dev-cli/internal/hash"
 	"dev-cli/internal/jsonformat"
+	"dev-cli/internal/server"
 	"dev-cli/internal/uuid"
 	"fmt"
 	"os"
@@ -55,6 +56,10 @@ func main() {
 			fmt.Printf("Помилка: невідомий алгоритм '%s'. Доступні: sha256, md5\n", algorithm)
 			os.Exit(1)
 		}
+
+	case "serve":
+		port:= ":8080"
+		server.Start((port))
 	case "info":
 		fmt.Println("All command: uuid, env, json")
 	default:
