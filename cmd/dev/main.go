@@ -4,6 +4,7 @@ import (
 	"dev-cli/internal/env"
 	"dev-cli/internal/hash"
 	"dev-cli/internal/jsonformat"
+	"dev-cli/internal/jwt"
 	"dev-cli/internal/server"
 	"dev-cli/internal/uuid"
 	"fmt"
@@ -58,10 +59,32 @@ func main() {
 		}
 
 	case "serve":
-		port:= ":8080"
+		port := ":8080"
 		server.Start((port))
+
+	case "jwt":
+		if len(os.Args) < 3 {
+			fmt.Println("Помилка: вкажіть JWT-токен. Наприклад: dev jwt <token>")
+			os.Exit(1)
+		}
+
+		token := os.Args[2]
+
+		rawJSON, err := jwt.DecodePayload(token)
+		if err != nil {
+			fmt.Println("Помилка:", err)
+			os.Exit(1)
+		}
+
+		formatted, err := jsonformat.Format(rawJSON)
+		if err != nil {
+			fmt.Println("Помилка форматування отриманого JSON:", err)
+			os.Exit(1)
+		}
+
+		fmt.Println(formatted)
 	case "info":
-		fmt.Println("All command: uuid, env, json")
+		fmt.Println("All command: uuid, env, json, hash, serve, jwt")
 	default:
 		fmt.Printf("Невідома команда: '%s'. Спробуйте 'uuid'.\n", command)
 	}
