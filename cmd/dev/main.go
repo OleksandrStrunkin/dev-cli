@@ -6,6 +6,7 @@ import (
 	"dev-cli/internal/jsonformat"
 	"dev-cli/internal/jwt"
 	"dev-cli/internal/server"
+	"dev-cli/internal/sysinfo"
 	"dev-cli/internal/uuid"
 	"fmt"
 	"os"
@@ -14,7 +15,7 @@ import (
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Error: please provide a command. Example: dev uuid")
-		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info")
+		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info, sys")
 		os.Exit(1)
 	}
 
@@ -87,8 +88,10 @@ func main() {
 
 		fmt.Println(formatted)
         
+	case "sys":
+		sysinfo.GetDetails()
 	case "info":
-		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info")
+		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info, sys")
         
 	default:
 		fmt.Printf("Error: unknown command '%s'. Try 'dev info' to see available commands.\n", command)
