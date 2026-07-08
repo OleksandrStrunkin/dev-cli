@@ -13,8 +13,8 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Помилка: будь ласка, вкажіть команду. Наприклад: dev uuid")
-		fmt.Println("Доступні команди: uuid, env, json, info")
+		fmt.Println("Error: please provide a command. Example: dev uuid")
+		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info")
 		os.Exit(1)
 	}
 
@@ -23,24 +23,27 @@ func main() {
 	case "uuid":
 		key := uuid.Generate()
 		fmt.Println("New key:", key)
+        
 	case "env":
 		env.PrintAll()
+        
 	case "json":
 		if len(os.Args) < 3 {
-			fmt.Println("Помилка: вкажіть JSON-рядок. Наприклад: dev json '{\"a\":1}'")
+			fmt.Println("Error: please provide a JSON string. Example: dev json '{\"a\":1}'")
 			os.Exit(1)
 		}
-		formated, err := jsonformat.Format(os.Args[2])
+		formatted, err := jsonformat.Format(os.Args[2])
 		if err != nil {
-			fmt.Println("Помилка: невалідний JSON формат ->", err)
+			fmt.Println("Error: invalid JSON format ->", err)
 			os.Exit(1)
 		}
-		fmt.Println(formated)
+		fmt.Println(formatted)
+        
 	case "hash":
 		if len(os.Args) < 4 {
-			fmt.Println("Помилка: недостатньо аргументів.")
-			fmt.Println("Використання: dev hash <алгоритм> <текст>")
-			fmt.Println("Алгоритми: sha256, md5")
+			fmt.Println("Error: insufficient arguments.")
+			fmt.Println("Usage: dev hash <algorithm> <text>")
+			fmt.Println("Algorithms: sha256, md5")
 			os.Exit(1)
 		}
 		algorithm := os.Args[2]
@@ -54,17 +57,17 @@ func main() {
 			result := hash.MD5(textToHash)
 			fmt.Println(result)
 		default:
-			fmt.Printf("Помилка: невідомий алгоритм '%s'. Доступні: sha256, md5\n", algorithm)
+			fmt.Printf("Error: unknown algorithm '%s'. Available: sha256, md5\n", algorithm)
 			os.Exit(1)
 		}
 
 	case "serve":
 		port := ":8080"
-		server.Start((port))
+		server.Start(port)
 
 	case "jwt":
 		if len(os.Args) < 3 {
-			fmt.Println("Помилка: вкажіть JWT-токен. Наприклад: dev jwt <token>")
+			fmt.Println("Error: please provide a JWT token. Example: dev jwt <token>")
 			os.Exit(1)
 		}
 
@@ -72,20 +75,23 @@ func main() {
 
 		rawJSON, err := jwt.DecodePayload(token)
 		if err != nil {
-			fmt.Println("Помилка:", err)
+			fmt.Println("Error:", err)
 			os.Exit(1)
 		}
 
 		formatted, err := jsonformat.Format(rawJSON)
 		if err != nil {
-			fmt.Println("Помилка форматування отриманого JSON:", err)
+			fmt.Println("Error formatting decoded JSON:", err)
 			os.Exit(1)
 		}
 
 		fmt.Println(formatted)
+        
 	case "info":
-		fmt.Println("All command: uuid, env, json, hash, serve, jwt")
+		fmt.Println("Available commands: uuid, env, json, hash, serve, jwt, info")
+        
 	default:
-		fmt.Printf("Невідома команда: '%s'. Спробуйте 'uuid'.\n", command)
+		fmt.Printf("Error: unknown command '%s'. Try 'dev info' to see available commands.\n", command)
+		os.Exit(1)
 	}
 }
